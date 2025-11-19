@@ -1,10 +1,9 @@
-name: Security Pipeline
-
-permissions:
-  contents: read          # checkout code
-  issues: write           # create ZAP issue
-  checks: write           # upload checks
-  pull-requests: write    # comment on PR
+name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.9.0
+        with:
+          target: 'https://abc-air.pythonanywhere.com'
+          cmd_options: '-a'
+          artifact_name: zap_report-${{ github.run_number }}   # ← new line
 
 on:
   push:
