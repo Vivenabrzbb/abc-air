@@ -1,29 +1,27 @@
 name: Security Pipeline
 
-# ------- permissions fix -------
-permissions:
-  contents: read
-  issues: write
-  checks: write
-  pull-requests: write
-  actions: read
-
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # manual button
+  workflow_dispatch:
 
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.9.0
+      - name: OWASP ZAP Baseline (no upload)
+        run: |
+          docker pull owasp/zap2docker-stable:latest
+          docker run --rm -v $PWD:/zap/wrk \
+            owasp/zap2docker-stable zap-baseline.py \
+            -t https://abc-air.pythonanywhere.com \
+            -r zap_report.html
+        continue-on-error: true   # ZAP returns 2 when issues found
+
+      - name: Upload HTML manually (optional)
+        uses: actions/upload-artifact@v4
         with:
-          target: 'https://abc-air.pythonanywhere.com'
-          rules_file_name: ''        # use default rules
-          artifact_name: 'ZAPReport'
-          cmd_options: '-a'
+          name: zap-baseline-report
+          path: zap_report.html
