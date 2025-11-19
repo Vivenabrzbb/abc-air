@@ -10,10 +10,10 @@ jobs:
   zap_scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.7.0
+        uses: zaproxy/action-baseline@v0.9.0   # ← updated
         with:
           target: 'https://abc-air.pythonanywhere.com'
-          rules_file_name: 'tests/zap_rules.tsv'
+          # rules_file_name removed – we’ll use default rules for now
           cmd_options: '-a'
