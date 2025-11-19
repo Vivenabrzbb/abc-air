@@ -25,5 +25,5 @@ jobs:
         with:
           target: 'https://abc-air.pythonanywhere.com'
           rules_file_name: ''        # use default rules
-          artifact_name: 'zap_report-${{ github.run_number }}'
+          artifact_name: 'ZAPReport'
           cmd_options: '-a'
