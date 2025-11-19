@@ -1,23 +1,29 @@
-name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.9.0
-        with:
-          target: 'https://abc-air.pythonanywhere.com'
-          cmd_options: '-a'
-          artifact_name: zap_report-${{ github.run_number }}   # ← new line
+name: Security Pipeline
+
+# ------- permissions fix -------
+permissions:
+  contents: read
+  issues: write
+  checks: write
+  pull-requests: write
+  actions: read
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:   # manual button
 
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.9.0
         with:
           target: 'https://abc-air.pythonanywhere.com'
+          rules_file_name: ''        # use default rules
+          artifact_name: 'zap_report-${{ github.run_number }}'
           cmd_options: '-a'
